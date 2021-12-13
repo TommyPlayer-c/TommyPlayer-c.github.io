@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Effective STL 笔记-第1章 容器 - Keep moving</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="TommyPlayer"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TommyPlayer"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="1 容器"><meta property="og:type" content="blog"><meta property="og:title" content="Effective STL 笔记-第1章 容器"><meta property="og:url" content="https://tommyplayer-c.github.io/2021/07/15/Effective-STL-1-%E5%AE%B9%E5%99%A8/"><meta property="og:site_name" content="Keep moving"><meta property="og:description" content="1 容器"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://tommyplayer-c.github.io/img/og_image.png"><meta property="article:published_time" content="2021-07-14T16:00:00.000Z"><meta property="article:modified_time" content="2021-10-06T08:26:27.363Z"><meta property="article:author" content="TommyPlayer"><meta property="article:tag" content="STL"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://tommyplayer-c.github.io/2021/07/15/Effective-STL-1-%E5%AE%B9%E5%99%A8/"},"headline":"Effective STL 笔记-第1章 容器","image":["https://tommyplayer-c.github.io/img/og_image.png"],"datePublished":"2021-07-14T16:00:00.000Z","dateModified":"2021-10-06T08:26:27.363Z","author":{"@type":"Person","name":"TommyPlayer"},"publisher":{"@type":"Organization","name":"Keep moving","logo":{"@type":"ImageObject","url":{"text":"丢掉幻想，准备斗争"}}},"description":"1 容器"}</script><link rel="canonical" href="https://tommyplayer-c.github.io/2021/07/15/Effective-STL-1-%E5%AE%B9%E5%99%A8/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Keep moving" type="application/atom+xml">
+</head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">丢掉幻想，准备斗争</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-07-14T16:00:00.000Z" title="2021/7/15 上午12:00:00">2021-07-15</time>发表</span><span class="level-item"><time dateTime="2021-10-06T08:26:27.363Z" title="2021/10/6 下午4:26:27">2021-10-06</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/C/">C++</a></span><span class="level-item">23 分钟读完 (大约3432个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">Effective STL 笔记-第1章 容器</h1><div class="content"><h1 id="1-容器"><a href="#1-容器" class="headerlink" title="1 容器"></a>1 容器</h1><span id="more"></span>
+
+<h2 id="第-1-条：慎重选择容器类型。"><a href="#第-1-条：慎重选择容器类型。" class="headerlink" title="第 1 条：慎重选择容器类型。"></a>第 1 条：慎重选择容器类型。</h2><p>STL 容器不是简单的好，而是确实很好。</p>
+<p>容器类型如下：</p>
+<ul>
+<li><strong>标准 STL 序列容器</strong>：vector、string、deque、list。</li>
+<li><strong>标准 STL 关联容器</strong>：set、multiset、map、multimap。</li>
+<li>非标准序列容器 slist 和 rope。slist 是一个单向链表，rope 本质上是一个 “重型” string。</li>
+<li>非标准的关联容器：hash_set、hash_multiset、hash_map、hash_multimap。</li>
+<li><strong>vector<char> 作为 string 的替代</strong>。</li>
+<li>vector 作为标准关联容器的替代：有时 vector 在运行时间和空间上都要优于标准关联容器。</li>
+<li><strong>几种标准的非 STL 容器</strong>：数组、bitset、valarray、<strong>stack</strong>、<strong>queue</strong>、<strong>priority_queue</strong>。</li>
+</ul>
+<p>选择标准：</p>
+<ol>
+<li><p>vector 应该是默认使用的序列类型；需要频繁地在序列中间做插入和删除操作时，使用 list；大多数插入和删除的操作发生在序列的头部和尾部时，使用 deque。</p>
+</li>
+<li><p><strong>连续内存容器</strong>：也称为基于数组的容器（array-based container），特点是会把它的元素存放在一块或多块动态分配的内存中，<strong>每块内存中有多个元素</strong>。</p>
+<p>插入或删除元素时，<strong>同一内存块中的所有元素要向前或向后移动</strong>，这样会影响效率和异常安全性。</p>
+<p>连续内存容器有 vector、string、deque、rope。</p>
+</li>
+<li><p><strong>基于节点的容器</strong>：每一个动态分配的内存块中只存放一个元素。<strong>元素的插入和删除只影响到指向节点的指针，而不影响节点本身的内容</strong>。所以插入或删除操作时元素的值不需要移动。</p>
+<p>基于节点的容器有 list 和 slist。</p>
+</li>
+<li><p>如果容器内部使用了引用计数技术（reference counting），你是否介意？如果是，就要避免使用 string 和 rope（都使用了引用计数技术）。可以考虑 vector<char></p>
+</li>
+<li><p>你需要使迭代器、指针、引用变为无效的次数最少吗？基于节点的容器没有这个问题，<strong>针对连续内存容器的插入和删除操作一般</strong>会导致指向该容器的迭代器、指针和引用变为无效。</p>
+</li>
+<li><p>如果在容器上使用 swap，使得迭代器、指针或引用变为无效了，你会在意吗？如果在意，你要避免使用 string，<strong>因为 string 是 STL 中在 swap 过程中会导致迭代器、指针和引用变为无效的唯一容器</strong>。</p>
+</li>
+</ol>
+<h2 id="第-2-条：不要试图编写独立于容器类型的代码。"><a href="#第-2-条：不要试图编写独立于容器类型的代码。" class="headerlink" title="第 2 条：不要试图编写独立于容器类型的代码。"></a>第 2 条：不要试图编写独立于容器类型的代码。</h2><p>容器类型被泛化为序列容器和关联容器，类似的容器被赋予相似的功能：</p>
+<ol>
+<li>标准的连续内存容器提供随机访问迭代器，而标准的基于节点的容器提供了双向迭代器。</li>
+<li>序列容器支持 push_front 和/或 push_back 操作，而关联容器则不然。</li>
+<li>关联容器提供了对数时间的 lower_bound、upper_bound、equal_range 成员函数，但序列容器却没有提供。</li>
+</ol>
+<p>所以，试图编写对序列容器和关联容器都适用的代码是毫无意义的，因为很多成员函数仅当其容器为某一类型时才存在。这种限制的根源在于，对不同类型的序列容器，使迭代器、指针和引用无效（invalidate）的规则是不同的。不同的容器是不同的，它们有非常明显的优缺点。它们并不是被设计来交换使用的。</p>
+<p><strong>一种容器类型转换为另一种容器类型</strong>：typedef</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span>...&#125;;</span><br><span class="line"><span class="keyword">typedef</span> vector&lt;Widget&gt; WidgetContainer;</span><br><span class="line">WidgetContainer cw;</span><br><span class="line">Widget bestWidget;</span><br><span class="line">...</span><br><span class="line">WidgetContainer::iterator i = <span class="built_in">find</span>(cw.<span class="built_in">begin</span>(), cw.<span class="built_in">end</span>(), bestWidget);</span><br></pre></td></tr></table></figure>
+
+<p>这样就使得改变容器类型要容易得多，尤其当这种改变仅仅是增加一个自定义得分配子时，就显得更为方便（这一改变不影响使迭代器/指针/引用无效的规则）。</p>
+<h2 id="第-3-条：确保容器中的对象拷贝正确而高效。"><a href="#第-3-条：确保容器中的对象拷贝正确而高效。" class="headerlink" title="第 3 条：确保容器中的对象拷贝正确而高效。"></a>第 3 条：确保容器中的对象拷贝正确而高效。</h2><ul>
+<li><p>存在继承关系的情况下，拷贝动作会导致<strong>剥离（slicing）</strong>：如果创建了一个存放基类对象的容器，却向其中插入派生类对象，那么在派生类对象（通过基类的拷贝构造函数）被拷贝进容器时，它所特有的部分（即派生类中的信息）将会丢失。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;Widget&gt; vw;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpecialWidget</span>:</span>			<span class="comment">// SpecialWidget 继承于上面的 Widget</span></span><br><span class="line">	<span class="keyword">public</span> Widget&#123;...&#125;;</span><br><span class="line">SpecialWidget sw;</span><br><span class="line">vw.<span class="built_in">push_back</span>();					<span class="comment">// sw 作为基类对象被拷贝进 vw 中</span></span><br><span class="line">								<span class="comment">// 它的派生类特有部分在拷贝时被丢掉了</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>剥离意味着向基类对象中的容器中插入派生类对象几乎总是错误的</strong>。</li>
+<li>解决剥离问题的简单方法：使容器包含<strong>指针</strong>而不是对象。</li>
+</ul>
+</li>
+</ul>
+<h2 id="第-4-条：调用-empty-而不是检查-size-是否为0。"><a href="#第-4-条：调用-empty-而不是检查-size-是否为0。" class="headerlink" title="第 4 条：调用 empty 而不是检查 size()是否为0。"></a>第 4 条：调用 empty 而不是检查 size()是否为0。</h2><ul>
+<li><p>empty 通常被实现为内联函数（inline function），并且它做的仅仅是返回 size 是否为 0.</p>
+</li>
+<li><p>empty 对所有标准容器都是常数时间操作，而对于一些 list 实现，size 耗费线性时间。</p>
+</li>
+</ul>
+<h2 id="第-5-条：区间成员函数优先于与之对应的单元素成员函数。"><a href="#第-5-条：区间成员函数优先于与之对应的单元素成员函数。" class="headerlink" title="第 5 条：区间成员函数优先于与之对应的单元素成员函数。"></a>第 5 条：区间成员函数优先于与之对应的单元素成员函数。</h2><p>小测验：给定 v1 和 v2 两个向量，使 v1 的内容和 v2 <strong>后半部分</strong>相同的最简单操作是什么？</p>
+<p>​    <code>v1.assign(v2.begin() + v2.size() / 2, v2.end());</code></p>
+<ul>
+<li>TIP：<code>assign</code> 存在于所有的标准序列容器（vector，string，deque，list）中，<strong>当你需要完全替换一个容器的内容时，应该想到赋值（assignment）</strong>。</li>
+<li>使用区间成员函数的原因：少写一些代码；得到意图清晰和更加直接的代码；更高的效率。</li>
+</ul>
+<p>把一个 int 数组拷贝到一个 vector 的前端（P22）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> data[numValues];</span><br><span class="line">vector&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">...</span><br><span class="line">v.<span class="built_in">insert</span>(v.<span class="built_in">begin</span>(), data, data + numValues);	<span class="comment">// 使用区间形式的 insert</span></span><br></pre></td></tr></table></figure>
+
+<p>C++标准要求区间 insert 函数把现有容器中的元素<strong>直接移动到它们最终的位置上</strong>，即只需付出<strong>每个元素移动一次</strong>的代价。</p>
+<p>支持区间的成员函数：</p>
+<ul>
+<li><p>区间创建：所有的标准容器都提供以下形式的构造函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">container::<span class="built_in">container</span>(InputIterator begin,		<span class="comment">// 区间开始</span></span><br><span class="line">                    InputIterator end)			<span class="comment">// 区间结束</span></span><br></pre></td></tr></table></figure></li>
+<li><p>区间插入：所有的标准序列容器都提供以下形式的 insert：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">container::insert</span><span class="params">(iterator position,		<span class="comment">// 在何处插入区间</span></span></span></span><br><span class="line"><span class="params"><span class="function">                      InputIterator begin,		<span class="comment">// 区间开始</span></span></span></span><br><span class="line"><span class="params"><span class="function">                      InputIterator end)</span>		<span class="comment">// 区间结束</span></span></span><br></pre></td></tr></table></figure>
+
+<p>关联容器：<code>void container::insert(InputIterator begin, InputIterator end);</code></p>
+</li>
+<li><p>区间删除：所有的标准容器都提供了区间形式的删除（erase）操作。</p>
+<p>序列容器：<code>iterator container::erase(iterator begin, iterator end);</code></p>
+<p>关联容器：<code>void container::erase(iterator begin, iterator end);</code></p>
+</li>
+</ul>
+<h2 id="第-6-条：当心-C-编译器最烦人的分析机制。"><a href="#第-6-条：当心-C-编译器最烦人的分析机制。" class="headerlink" title="第 6 条：当心 C++ 编译器最烦人的分析机制。"></a>第 6 条：当心 C++ 编译器最烦人的分析机制。</h2><p><strong>围绕参数名的括号</strong>会被忽略，而<strong>独立的括号</strong>则表明参数列表的存在（存在一个函数指针参数）。</p>
+<p>C++中一条普遍规律：尽可能地解释为函数声明。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将一个含有整数的文件复制到一个list中。</span></span><br><span class="line"><span class="function">ifstream <span class="title">dataFile</span><span class="params">(<span class="string">&quot;ints.dat&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">list&lt;<span class="keyword">int</span>&gt; <span class="title">data</span><span class="params">(istream_iterator&lt;<span class="keyword">int</span>&gt;(dataFile),		<span class="comment">// dataFile两边的括号会被忽略</span></span></span></span><br><span class="line"><span class="params"><span class="function">              istream_iterator&lt;<span class="keyword">int</span>&gt;())</span></span>;				<span class="comment">// 函数指针</span></span><br><span class="line">													<span class="comment">// 上式声明了一个函数，而不是初始化对象！</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第-7-条：如果容器中包含了通过-new-操作创建的指针，切记在容器对象析构前将指针-delete-掉。"><a href="#第-7-条：如果容器中包含了通过-new-操作创建的指针，切记在容器对象析构前将指针-delete-掉。" class="headerlink" title="第 7 条：如果容器中包含了通过 new 操作创建的指针，切记在容器对象析构前将指针 delete 掉。"></a>第 7 条：如果容器中包含了通过 new 操作创建的指针，切记在容器对象析构前将指针 delete 掉。</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;Widget*&gt; vwp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SOME_MAGIC_NUMBER; ++i)</span><br><span class="line">        vwp.<span class="built_in">push_back</span>(<span class="keyword">new</span> Widget);</span><br><span class="line">    ...												<span class="comment">// 使用 vwp  	</span></span><br><span class="line">&#125;													<span class="comment">// 这里发生 Widget 泄露</span></span><br></pre></td></tr></table></figure>
+
+<p>当你使用指针的容器，而其中的指针应该被删除时，为了避免资源泄露，你必须或者用引用计数形式的智能指针对象（比如 Boost 的 shared_ptr）代替指针，或者当容器被析构时手工删除其中的每个指针。</p>
+<p>使用 for_each 和 delete 函数对象来解决这个问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">DeleteObject</span>&#123;</span>							<span class="comment">// 这里去掉了模板化和基类</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;						<span class="comment">// 在这里加入模板化</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> T* ptr)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">delete</span> ptr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    deque&lt;SpecialString*&gt; dssp;</span><br><span class="line">    for_each(dssp.<span class="built_in">begin</span>(), dssp.<span class="built_in">end</span>(),</span><br><span class="line">            <span class="built_in">DeletObject</span>());						<span class="comment">// 确定的行为，但不是异常安全的</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用智能指针来解决这个问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">typedef</span> boost::shared_ptr&lt;Widget&gt; SPW;	<span class="comment">// SPW = 指向 Widget 的 shared_ptr</span></span><br><span class="line">    </span><br><span class="line">    vector&lt;SPW&gt; vwp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SOME_MAGIC_NUMBER; ++i)</span><br><span class="line">        vwp.<span class="built_in">push_back</span>(<span class="built_in">SPW</span>(<span class="keyword">new</span> Widget));</span><br><span class="line">    ...												<span class="comment">// 使用vwp 	</span></span><br><span class="line">&#125;													<span class="comment">// 这里不会有Widget泄露，即使上面的代码														有异常被抛出。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第-8-条：请勿创建包含-auto-ptr-的容器对象"><a href="#第-8-条：请勿创建包含-auto-ptr-的容器对象" class="headerlink" title="第 8 条：请勿创建包含 auto_ptr 的容器对象"></a>第 8 条：请勿创建包含 auto_ptr 的容器对象</h2><p>auto_ptr 的容器（COAP）是被禁止的，试图使用它们的代码不会被编译通过。</p>
+<p>复制一个 auto_ptr 时，它所指向的对象的所有权被移交到复制的 auto_ptr 上，而它自身被置为 NULL。<strong>复制一个 auto_ptr 意味着改变它的值</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;auto_ptr&lt;Widget&gt; &gt; widgets;</span><br><span class="line"><span class="built_in">sort</span>(widgets.<span class="built_in">begin</span>(), widgets.<span class="built_in">end</span>(),</span><br><span class="line">    <span class="built_in">widgetAPcompare</span>());			<span class="comment">//	对vector所做的排序操作可能会改变它的内容！</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第-9-条：慎重选择删除元素的方法"><a href="#第-9-条：慎重选择删除元素的方法" class="headerlink" title="第 9 条：慎重选择删除元素的方法"></a>第 9 条：慎重选择删除元素的方法</h2><h3 id="删除容器中有特定值的所有对象"><a href="#删除容器中有特定值的所有对象" class="headerlink" title="删除容器中有特定值的所有对象"></a>删除容器中有特定值的所有对象</h3><p>对标准容器 <code>Container&lt;int&gt;c;</code> 删除其中所有值为 1963 的元素的方法。</p>
+<p><strong>erase-remove 习惯用法</strong>（连续内存容器 vector，deque，string）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.<span class="built_in">erase</span>(<span class="built_in">remove</span>(c.<span class="built_in">begin</span>(), c.<span class="built_in">end</span>(), <span class="number">1963</span>), c.<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure>
+
+<p>list：<code>c.remove(1963);</code> </p>
+<p>关联容器：<code>c.erase(1963);</code> 对数时间开销，基于等价而不是相等。注意关联容器没有名为 remove 的成员函数，使用任何名为 remove 的操作都是完全错误的。</p>
+<h3 id="删除容器中满足特定判别式（条件）的所有对象"><a href="#删除容器中满足特定判别式（条件）的所有对象" class="headerlink" title="删除容器中满足特定判别式（条件）的所有对象"></a>删除容器中满足特定判别式（条件）的所有对象</h3><p>删除使下面的判别式返回 true 的每一个对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">badValue</span><span class="params">(<span class="keyword">int</span> )</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 序列容器(vector,string,deque,list)</span></span><br><span class="line">c.<span class="built_in">erase</span>(<span class="built_in">remove_if</span>(c.<span class="built_in">begin</span>(), c.<span class="built_in">end</span>(), badValue), c.<span class="built_in">end</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// list</span></span><br><span class="line">c.<span class="built_in">remove_if</span>(badValue);</span><br></pre></td></tr></table></figure>
+
+<p>对于标准关联容器，则没有这么直截了当。</p>
+<p>简单但效率稍低的办法：利用 remove_copy_if 把我们需要的值复制到一个新容器中，然后把原来容器的内和新容器的内容相互交换：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AssocContainer&lt;<span class="keyword">int</span>&gt; c;</span><br><span class="line">...</span><br><span class="line">AssocContainer&lt;<span class="keyword">int</span>&gt; goodValues;				<span class="comment">// 保持不被删除的值的临时容器</span></span><br><span class="line"><span class="built_in">remove_copy_if</span>(c.<span class="built_in">begin</span>(), c.<span class="built_in">end</span>(), <span class="built_in">inserter</span>(goodValues, goodValues.<span class="built_in">end</span>()), badValue);</span><br><span class="line">c.<span class="built_in">swap</span>(goodValues);</span><br></pre></td></tr></table></figure>
+
+<p>高效方法：写一个循环遍历容器中的元素，并在遍历过程中删除元素。注意，对于关联容器（map，set，multimap，multiset），<strong>删除当前的 iterator，只会使当前的 iterator 失效</strong>。</p>
+<p>原因：关联容器的底层使用<strong>红黑树</strong>实现，插入、删除一个结点不会对其他结点造成影响。erase 只会使被删除元素的迭代器失效。关联容器的 erase 返回值为 <strong>void</strong>，可以使用 <strong>erase(iter++)</strong> 的方式删除迭代器。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AssocContainer&lt;<span class="keyword">int</span>&gt; c;</span><br><span class="line">ofstream logFile;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span> (AssocContainer&lt;<span class="keyword">int</span>&gt;::iterator i = c.<span class="built_in">begin</span>(); i != c.<span class="built_in">end</span>(); <span class="comment">/*什么也不做*/</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">badValue</span>(*i)) </span><br><span class="line">    &#123;</span><br><span class="line">        logFile &lt;&lt; <span class="string">&quot;Erasing &quot;</span> &lt;&lt; *i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;	<span class="comment">// 写日志文件</span></span><br><span class="line">        c.<span class="built_in">erase</span>(i++);							<span class="comment">// 使用后缀递增删除元素，避免迭代器无效。</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> ++i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于序列式容器（vector，string，deque），<strong>删除当前的 iterator 会使后面所有元素的 iterator 都失效</strong>。</p>
+<p>原因： vector、string、deque 使用了<strong>连续分配的内存</strong>，删除一个元素会导致后面的所有元素都向前移动一个位置。所以不能使用 erase(iter++) 的方式，<strong>但可以使用 erase 方法，序列容器的 erase 可以返回下一个有效的 iterator</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (SeqContainer&lt;<span class="keyword">int</span>&gt;::iterator i = c.<span class="built_in">begin</span>(); i != c.<span class="built_in">end</span>(); )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">badValue</span>(*i))</span><br><span class="line">    &#123;</span><br><span class="line">		logFile &lt;&lt; <span class="string">&quot;Erasing &quot;</span> &lt;&lt; *i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">        i = c.<span class="built_in">erase</span>(i);						<span class="comment">// 把erase的返回值赋给i，使i的值保持有效。</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> ++i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第-10-条：了解分配子（allocator）的约定和限制"><a href="#第-10-条：了解分配子（allocator）的约定和限制" class="headerlink" title="第 10 条：了解分配子（allocator）的约定和限制"></a>第 10 条：了解分配子（allocator）的约定和限制</h2><p>分配子最初是作为内存模型的抽象而产生的。</p>
+<p>编写自定义的分配子，需要记住哪些内容：</p>
+<ul>
+<li>分配子是一个模板，模板参数 T 代表你为它分配内存的对象类型。</li>
+<li>提供类型定义 pointer 和 reference，但是始终让 pointer 为 T*，reference 为 T&amp;。</li>
+<li>千万别让你的分配子拥有随对象而不同的状态（per-object state）。通常，分配子不应该有非静态的数据成员。</li>
+<li>传给分配子的 allocate 成员函数的是那些要求内存的<strong>对象的个数</strong>，而<strong>不是所需的字节数</strong>。同时要记住，这些函数返回 T* 指针（通过 pointer 类型定义），即使尚未有 T 对象被构造出来。</li>
+<li>一定要提供嵌套的 rebind 模板，因为标准容器依赖该模板。（P42）</li>
+</ul>
+<h2 id="第-11-条：理解自定义分配子的合理用法。"><a href="#第-11-条：理解自定义分配子的合理用法。" class="headerlink" title="第 11 条：理解自定义分配子的合理用法。"></a>第 11 条：理解自定义分配子的合理用法。</h2><h2 id="第-12-条：切勿对-STL-容器的线程安全性有不切实际的依赖。"><a href="#第-12-条：切勿对-STL-容器的线程安全性有不切实际的依赖。" class="headerlink" title="第 12 条：切勿对 STL 容器的线程安全性有不切实际的依赖。"></a>第 12 条：切勿对 STL 容器的线程安全性有不切实际的依赖。</h2><p>STL 只支持以下多线程标准：</p>
+<ul>
+<li>多个线程读是安全的。</li>
+<li>多个线程对不同的容器做写入操作是安全的。</li>
+</ul>
+<p>你不能指望 STL 库会把你从手工同步控制中解脱出来，而且你不能依赖于任何线程支持。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Effective STL 笔记-第1章 容器</p><p><a href="https://tommyplayer-c.github.io/2021/07/15/Effective-STL-1-容器/">https://tommyplayer-c.github.io/2021/07/15/Effective-STL-1-容器/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>TommyPlayer</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-07-15</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-10-06</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/STL/">STL</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/07/16/Effective-STL-2-vector-%E5%92%8C-string/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Effective STL 笔记-第2章 vector 和 string</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/07/01/hello-world/"><span class="level-item">Hello World</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread',
+            appId: "JUNkaa2nFLRBW02VRVV6TDlA-gzGzoHsz",
+            appKey: "X2utmObXqHKT4G4RpNdh7rEH",
+            placeholder: "欢迎探讨评论……",
+            avatar: "/img/alinePerson.svg",
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            lang: "zh-CN",
+            visitor: true,
+            highlight: true,
+            recordIP: false,
+            
+            
+            
+            enableQQ: false,
+            requiredFields: [],
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/profile.jpg" alt="TommyPlayer"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">TommyPlayer</p><p class="is-size-6 is-block">Student</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">25</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">7</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">9</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/TommyPlayer-c" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/TommyPlayer-c"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/MySQL/"><span class="level-start"><span class="level-item">MySQL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Vscode/"><span class="level-start"><span class="level-item">Vscode</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/linux/"><span class="level-start"><span class="level-item">linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"><span class="level-start"><span class="level-item">数据结构与算法</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><span class="level-start"><span class="level-item">计算机网络</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C%E8%AF%AD%E8%A8%80/"><span class="tag">C语言</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MySQL/"><span class="tag">MySQL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/"><span class="tag">linux 网络编程</span><span class="tag">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux-%E9%85%8D%E7%BD%AE/"><span class="tag">linux 配置</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%9B%BE%E8%AE%BA/"><span class="tag">图论</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA/"><span class="tag">操作系统理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%90%86%E8%AE%BA/"><span class="tag">计算机网络理论</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#1-容器"><span class="level-left"><span class="level-item">1 容器</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#第-1-条：慎重选择容器类型。"><span class="level-left"><span class="level-item">第 1 条：慎重选择容器类型。</span></span></a></li><li><a class="level is-mobile" href="#第-2-条：不要试图编写独立于容器类型的代码。"><span class="level-left"><span class="level-item">第 2 条：不要试图编写独立于容器类型的代码。</span></span></a></li><li><a class="level is-mobile" href="#第-3-条：确保容器中的对象拷贝正确而高效。"><span class="level-left"><span class="level-item">第 3 条：确保容器中的对象拷贝正确而高效。</span></span></a></li><li><a class="level is-mobile" href="#第-4-条：调用-empty-而不是检查-size-是否为0。"><span class="level-left"><span class="level-item">第 4 条：调用 empty 而不是检查 size()是否为0。</span></span></a></li><li><a class="level is-mobile" href="#第-5-条：区间成员函数优先于与之对应的单元素成员函数。"><span class="level-left"><span class="level-item">第 5 条：区间成员函数优先于与之对应的单元素成员函数。</span></span></a></li><li><a class="level is-mobile" href="#第-6-条：当心-C-编译器最烦人的分析机制。"><span class="level-left"><span class="level-item">第 6 条：当心 C++ 编译器最烦人的分析机制。</span></span></a></li><li><a class="level is-mobile" href="#第-7-条：如果容器中包含了通过-new-操作创建的指针，切记在容器对象析构前将指针-delete-掉。"><span class="level-left"><span class="level-item">第 7 条：如果容器中包含了通过 new 操作创建的指针，切记在容器对象析构前将指针 delete 掉。</span></span></a></li><li><a class="level is-mobile" href="#第-8-条：请勿创建包含-auto-ptr-的容器对象"><span class="level-left"><span class="level-item">第 8 条：请勿创建包含 auto_ptr 的容器对象</span></span></a></li><li><a class="level is-mobile" href="#第-9-条：慎重选择删除元素的方法"><span class="level-left"><span class="level-item">第 9 条：慎重选择删除元素的方法</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#删除容器中有特定值的所有对象"><span class="level-left"><span class="level-item">删除容器中有特定值的所有对象</span></span></a></li><li><a class="level is-mobile" href="#删除容器中满足特定判别式（条件）的所有对象"><span class="level-left"><span class="level-item">删除容器中满足特定判别式（条件）的所有对象</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第-10-条：了解分配子（allocator）的约定和限制"><span class="level-left"><span class="level-item">第 10 条：了解分配子（allocator）的约定和限制</span></span></a></li><li><a class="level is-mobile" href="#第-11-条：理解自定义分配子的合理用法。"><span class="level-left"><span class="level-item">第 11 条：理解自定义分配子的合理用法。</span></span></a></li><li><a class="level is-mobile" href="#第-12-条：切勿对-STL-容器的线程安全性有不切实际的依赖。"><span class="level-left"><span class="level-item">第 12 条：切勿对 STL 容器的线程安全性有不切实际的依赖。</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">丢掉幻想，准备斗争</a><p class="is-size-7"><span>&copy; 2021 TommyPlayer</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>算法导论-动态规划原理 - Keep moving</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="TommyPlayer"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TommyPlayer"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="算法导论-动态规划原理1. 动态规划的概念"><meta property="og:type" content="blog"><meta property="og:title" content="算法导论-动态规划原理"><meta property="og:url" content="https://tommyplayer-c.github.io/2021/06/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E5%8E%9F%E7%90%86/"><meta property="og:site_name" content="Keep moving"><meta property="og:description" content="算法导论-动态规划原理1. 动态规划的概念"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934982.png"><meta property="og:image" content="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934781.png"><meta property="og:image" content="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934256.png"><meta property="og:image" content="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934042.png"><meta property="article:published_time" content="2021-06-07T16:00:00.000Z"><meta property="article:modified_time" content="2021-10-06T12:06:49.782Z"><meta property="article:author" content="TommyPlayer"><meta property="article:tag" content="动态规划"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934982.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://tommyplayer-c.github.io/2021/06/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E5%8E%9F%E7%90%86/"},"headline":"算法导论-动态规划原理","image":["https://gitee.com/qin-haonan/my-picture/raw/master/202110061934982.png","https://gitee.com/qin-haonan/my-picture/raw/master/202110061934781.png","https://gitee.com/qin-haonan/my-picture/raw/master/202110061934256.png","https://gitee.com/qin-haonan/my-picture/raw/master/202110061934042.png"],"datePublished":"2021-06-07T16:00:00.000Z","dateModified":"2021-10-06T12:06:49.782Z","author":{"@type":"Person","name":"TommyPlayer"},"publisher":{"@type":"Organization","name":"Keep moving","logo":{"@type":"ImageObject","url":{"text":"丢掉幻想，准备斗争"}}},"description":"算法导论-动态规划原理1. 动态规划的概念"}</script><link rel="canonical" href="https://tommyplayer-c.github.io/2021/06/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E5%8E%9F%E7%90%86/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Keep moving" type="application/atom+xml">
+</head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">丢掉幻想，准备斗争</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-06-07T16:00:00.000Z" title="2021/6/8 上午12:00:00">2021-06-08</time>发表</span><span class="level-item"><time dateTime="2021-10-06T12:06:49.782Z" title="2021/10/6 下午8:06:49">2021-10-06</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a></span><span class="level-item">9 分钟读完 (大约1312个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">算法导论-动态规划原理</h1><div class="content"><h1 id="算法导论-动态规划原理"><a href="#算法导论-动态规划原理" class="headerlink" title="算法导论-动态规划原理"></a>算法导论-动态规划原理</h1><h2 id="1-动态规划的概念"><a href="#1-动态规划的概念" class="headerlink" title="1. 动态规划的概念"></a>1. 动态规划的概念</h2><span id="more"></span>
+
+<ul>
+<li><p>动态规划 (dynamic programming) 与分治方法相似，都是通过组合子问题的解来求解原问题（programming 指的是一种<strong>表格法</strong>，并非编写计算机程序。</p>
+</li>
+<li><p>动态规划应用于子问题重叠的情况，即不同的子问题具有<strong>公共的子子问题</strong>（子问题的求解是递归进行的，将其划分为更小的子子问题）。动态规划对每个子子问题<strong>只求解一次</strong>，将其解保存在一个<strong>表格</strong>中，从而无需每次求解一个子子问题都重新计算，避免了这种不必要的计算工作。</p>
+</li>
+<li><p>动态规划常用来求解<strong>最优化问题</strong> (optimization problem)。这类问题有很多可行解，动态规划可以寻找到具有最优值（最大值或最小值）的解。这样的解为问题的<strong>一个</strong>最优解，而<strong>不是</strong>最优解，因为可能有<strong>多个解</strong>都达到最优值。</p>
+</li>
+</ul>
+<h2 id="2-动态规划的基本步骤和性质"><a href="#2-动态规划的基本步骤和性质" class="headerlink" title="2. 动态规划的基本步骤和性质"></a>2. 动态规划的基本步骤和性质</h2><h3 id="2-1-基本步骤"><a href="#2-1-基本步骤" class="headerlink" title="2.1 基本步骤"></a>2.1 基本步骤</h3><ol>
+<li>刻画一个最优解的结构特征（将原问题划分为子问题）。       </li>
+<li>利用子问题的最优解递归地定义最优解的值（递推公式）。      </li>
+<li>计算最优解的值，通常采用<strong>自底向上</strong>的方法。</li>
+<li>利用计算出的信息构造一个最优解。</li>
+</ol>
+<h3 id="2-2-性质"><a href="#2-2-性质" class="headerlink" title="2.2 性质"></a>2.2 性质</h3><ol>
+<li><p>两种方法：带备忘的<strong>自顶向下</strong> (top-down)法；<strong>自底向上</strong> (bottom-up)法       </p>
+</li>
+<li><p><strong>动态规划的标识</strong>：最优子结构，子问题重叠       </p>
+<ul>
+<li><p><strong>最优子结构</strong>：       </p>
+<p><strong>一个问题的最优解包含子问题的最优解</strong>，问题的最优解由子问题的最优解组合而成，而这些子问题可以独立求解。     </p>
+<p><u>做出一次选择，做出这次选择后会产生一个或多个待解的子问题；如何最好地刻画子问题空间（变量个数，具体表现在 dp 数组的维度）；考察多种选择中选择最优解。</u></p>
+</li>
+<li><p>子问题无关：同一个原问题的子问题的解不影响另一个子问题的解。       </p>
+</li>
+<li><p><strong>子问题重叠</strong>：递归算法重复求解相同的子问题。       </p>
+</li>
+<li><p>重构最优解：我们将每个子问题所作出的选择存入一个表中，这样就不必根据代价值来重构这些信息。      </p>
+</li>
+<li><p>如果每个问题都至少要求解一次，自底向上比备忘录快。如果子问题空间中的某些问题完全不必求解，则备忘方法快。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="3-最优子结构-Optimal-substructure"><a href="#3-最优子结构-Optimal-substructure" class="headerlink" title="3. 最优子结构 (Optimal substructure)"></a>3. 最优子结构 (Optimal substructure)</h2><ul>
+<li><p>最优子结构并不适用于所有最优化问题。</p>
+<p><strong>最短路径问题具有最优子结构的性质，但最长简单路径问题不具有这种性质。</strong></p>
+<p>例子：给定一个有向图 G = (V,E) 和 一对结点 u 和 v ，如果  p = p1p2 是从 u 到 v 的最短路径，那么 p1 是从 u 到 w 的最短路径。</p>
+<p><img src="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934982.png"></p>
+<p>证明如下：</p>
+<p>如果存在另外一条从 u 到 w 的最短路径，叫做 p’1，那么 p‘1p2 这条路径的长度小于 p1p2 的长度，这就与假设矛盾。</p>
+</li>
+<li><p>子问题无关：同一个原问题的一个子问题的解不影响另一个子问题的解。</p>
+<p>最短路径问题的子问题是<strong>无关</strong> (independent) 的。</p>
+<p>如果 (p1 = uw) (p2 = wv) 是最短路径，那么 p1 和 p2 除了 w 不能再有其他公共顶点。</p>
+</li>
+<li><p>最优子结构的体现：</p>
+<ol>
+<li>原问题的最优解涉及<strong>多少个子问题</strong>。</li>
+<li>在确定最优解使用哪些子问题时，我们需要考察<strong>多少种选择</strong>。</li>
+</ol>
+</li>
+</ul>
+<h2 id="4-重叠子问题-Overlapping-Subproblems"><a href="#4-重叠子问题-Overlapping-Subproblems" class="headerlink" title="4. 重叠子问题 (Overlapping Subproblems )"></a>4. 重叠子问题 (Overlapping Subproblems )</h2><p><img src="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934781.png" alt="image-20210601192602147"></p>
+<h2 id="5-无后效性"><a href="#5-无后效性" class="headerlink" title="5. 无后效性"></a>5. 无后效性</h2><p>这里参考了 leetcode 作者 liweiwei1419 的<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/bao-li-mei-ju-dong-tai-gui-hua-chai-fen-si-xiang-b/">题解</a>。</p>
+<p>一个问题的递归结构如下图所示（这里忽略问题场景）。</p>
+<p><img src="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934256.png" alt="image-20210601211550250"></p>
+<p>可以发现有重复求解的部分，需要添加缓存，这是「记忆化递归」。</p>
+<p>另外还可以从通过发现一个问题最开始的样子，通过「递推」一步一步求得原始问题的解，此时求解的过程如下图所示：</p>
+<p><img src="https://gitee.com/qin-haonan/my-picture/raw/master/202110061934042.png" alt="image-20210601211318570"></p>
+<p>箭头指向的地方表示当前求解的过程中参考了以前求解过的问题的结果，这个过程不能形成回路，<strong>形成回路就无法求解</strong>。</p>
+<h2 id="6-经典问题"><a href="#6-经典问题" class="headerlink" title="6. 经典问题"></a>6. 经典问题</h2><ol>
+<li>装配线调度（Assembly-Line Scheduling）</li>
+<li>钢条切割</li>
+<li>矩阵链乘法</li>
+<li>最长公共子序列（Longest Common Subsequence，LCS）</li>
+<li>旅行商问题（TSP）</li>
+<li>最优二叉搜索树</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>算法导论-动态规划原理</p><p><a href="https://tommyplayer-c.github.io/2021/06/08/数据结构与算法-算法导论-动态规划原理/">https://tommyplayer-c.github.io/2021/06/08/数据结构与算法-算法导论-动态规划原理/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>TommyPlayer</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-06-08</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-10-06</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/06/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E5%92%8C%E5%80%92%E6%8E%92%E9%A1%B5%E8%A1%A8/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">二级页表、倒排页表</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/05/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-RIP-%E5%8D%8F%E8%AE%AE%E7%9A%84%E9%97%AE%E9%A2%98/"><span class="level-item">RIP 协议的 2 个问题</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread',
+            appId: "JUNkaa2nFLRBW02VRVV6TDlA-gzGzoHsz",
+            appKey: "X2utmObXqHKT4G4RpNdh7rEH",
+            placeholder: "欢迎探讨评论……",
+            avatar: "/img/alinePerson.svg",
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            lang: "zh-CN",
+            visitor: true,
+            highlight: true,
+            recordIP: false,
+            
+            
+            
+            enableQQ: false,
+            requiredFields: [],
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/profile.jpg" alt="TommyPlayer"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">TommyPlayer</p><p class="is-size-6 is-block">Student</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">25</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">7</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">9</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/TommyPlayer-c" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/TommyPlayer-c"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/MySQL/"><span class="level-start"><span class="level-item">MySQL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Vscode/"><span class="level-start"><span class="level-item">Vscode</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/linux/"><span class="level-start"><span class="level-item">linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"><span class="level-start"><span class="level-item">数据结构与算法</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><span class="level-start"><span class="level-item">计算机网络</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C%E8%AF%AD%E8%A8%80/"><span class="tag">C语言</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MySQL/"><span class="tag">MySQL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/"><span class="tag">linux 网络编程</span><span class="tag">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux-%E9%85%8D%E7%BD%AE/"><span class="tag">linux 配置</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%9B%BE%E8%AE%BA/"><span class="tag">图论</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA/"><span class="tag">操作系统理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%90%86%E8%AE%BA/"><span class="tag">计算机网络理论</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#算法导论-动态规划原理"><span class="level-left"><span class="level-item">算法导论-动态规划原理</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-动态规划的概念"><span class="level-left"><span class="level-item">1. 动态规划的概念</span></span></a></li><li><a class="level is-mobile" href="#2-动态规划的基本步骤和性质"><span class="level-left"><span class="level-item">2. 动态规划的基本步骤和性质</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#2-1-基本步骤"><span class="level-left"><span class="level-item">2.1 基本步骤</span></span></a></li><li><a class="level is-mobile" href="#2-2-性质"><span class="level-left"><span class="level-item">2.2 性质</span></span></a></li></ul></li><li><a class="level is-mobile" href="#3-最优子结构-Optimal-substructure"><span class="level-left"><span class="level-item">3. 最优子结构 (Optimal substructure)</span></span></a></li><li><a class="level is-mobile" href="#4-重叠子问题-Overlapping-Subproblems"><span class="level-left"><span class="level-item">4. 重叠子问题 (Overlapping Subproblems )</span></span></a></li><li><a class="level is-mobile" href="#5-无后效性"><span class="level-left"><span class="level-item">5. 无后效性</span></span></a></li><li><a class="level is-mobile" href="#6-经典问题"><span class="level-left"><span class="level-item">6. 经典问题</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">丢掉幻想，准备斗争</a><p class="is-size-7"><span>&copy; 2021 TommyPlayer</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
